@@ -11,8 +11,8 @@ export const LATEST_PRODUCTS_LIMIT =
 export const DAYS_TO_EXPIRE = 30 * 24 * 60 * 60;
 
 export const SIGN_IN_DEFAULT_VALUES = {
-  email: "",
-  password: "",
+  email: "user@gmail.com",
+  password: "123123",
 };
 
 export const SIGN_UP_DEFAULT_VALUES = {
