@@ -28,6 +28,11 @@ export function formatError(error: any) {
   ) {
     const field = error.meta?.target ? error.meta.target[0] : "Field";
     return `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`;
+  } else if (
+    error.type === "CredentialsSignin" &&
+    error.code === "credentials"
+  ) {
+    return "Wrong E-mail or Password";
   } else {
     return typeof error.message === "string"
       ? error.message
@@ -43,4 +48,17 @@ export function round2(value: number | string) {
   } else {
     throw new Error("Type mismatch of value");
   }
+}
+
+const CURRENCY_FORMATER = new Intl.NumberFormat("en-US", {
+  currency: "USD",
+  style: "currency",
+  minimumFractionDigits: 2,
+});
+
+export function formatCurrency(amount: number | string | null) {
+  if (amount) {
+    return CURRENCY_FORMATER.format(Number(amount));
+  }
+  return "NaN";
 }

@@ -1,11 +1,10 @@
-import NextAuth, { NextAuthConfig } from "next-auth";
+import NextAuth from "next-auth";
 import { DAYS_TO_EXPIRE } from "./lib/constants";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "./db/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compareSync } from "bcrypt-ts-edge";
-import { fi } from "zod/v4/locales";
-import { NextResponse } from "next/server";
+import { authConfig } from "./auth.config";
 
 export const config = {
   pages: {
@@ -13,7 +12,7 @@ export const config = {
     error: "/signIn",
   },
   session: {
-    strategy: "jwt",
+    strategy: "jwt" as const,
     maxAge: DAYS_TO_EXPIRE,
   },
   adapter: PrismaAdapter(prisma),
@@ -49,6 +48,7 @@ export const config = {
     }),
   ],
   callbacks: {
+    ...authConfig.callbacks,
     async session({ session, user, trigger, token }: any) {
       session.user.id = token.sub;
       session.user.role = token.role;
@@ -74,23 +74,7 @@ export const config = {
       }
       return token;
     },
-    authorized({ request, auth }: any) {
-      if (!request.cookies.get("sessionCartId")) {
-        const sessionCartId = crypto.randomUUID();
-        const newRequestHeaders = new Headers(request.headers);
-        const response = NextResponse.next({
-          request: {
-            headers: newRequestHeaders,
-          },
-        });
-
-        response.cookies.set("sessionCartId", sessionCartId);
-        return response;
-      } else {
-        return true;
-      }
-    },
   },
-} satisfies NextAuthConfig;
+};
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config);
