@@ -21,3 +21,18 @@ export const SIGN_UP_DEFAULT_VALUES = {
   password: "",
   confirmPassword: "",
 };
+
+export const shippingAddressDefaultValues = {
+  fullName: "",
+  streetAddress: "",
+  city: "",
+  postalCode: "",
+  country: "",
+};
+
+export const CHECKOUT_STEPS = {
+  userLogin: 0,
+  shippingAddress: 1,
+  paymentMethod: 2,
+  placeOrder: 3,
+};
